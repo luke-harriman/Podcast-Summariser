@@ -1,8 +1,0 @@
-flask
-yt-dlp
-Pillow
-transformers
-torch
-torchvision
-opencv-python
-timm
