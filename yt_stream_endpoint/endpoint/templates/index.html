@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Processor</title>
+</head>
+<body>
+    <h1>YouTube Video Processor</h1>
+    <form method="post" autocomplete="off">
+        <input type="text" name="youtube_url" placeholder="Enter YouTube URL" required>
+        <button type="submit">Process</button>
+    </form>
+    {% if transcript %}
+        <h2>Transcript</h2>
+        <p>{{ transcript }}</p>
+        <h2>Word Timing</h2>
+        <p>{{ word_timing }}</p>
+    {% endif %}
+    {% if images %}
+        <h2>Detected Charts</h2>
+        {% for image in images %}
+            <img src="{{ url_for('static', filename='frames/' + image) }}" alt="Detected Chart">
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

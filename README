@@ -1,0 +1,15 @@
+Architecture for Single Repository (Monorepo):
+
+Folder Structure:
+
+/frontend: Contains all frontend code, which can be built and deployed to Vercel.
+/endpoint: Contains the machine learning model code, which is prepared for deployment using Docker to GCP's Cloud Run.
+CI/CD Pipeline:
+
+Use GitHub Actions, GitLab CI/CD, or another CI/CD tool to set up workflows that trigger on changes to specific paths (e.g., only deploy the frontend if there are changes in the /frontend directory).
+For the ML model, the pipeline should build the Docker container and deploy it to Cloud Run when changes are detected in the /endpoint directory.
+Docker Integration:
+
+In the /endpoint directory, include a Dockerfile that specifies how to build the Docker image for the ML model.
+Ensure your CI/CD tool is configured to build Docker images and push them to Google Container Registry or another container registry supported by Cloud Run.
+Choosing between a monorepo or polyrepo setup depends on your project's scale, team size, and workflow preferences. Both have their place in modern software development, and the best choice varies by the specific needs and context of your project.
