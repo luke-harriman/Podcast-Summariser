@@ -1,0 +1,38 @@
+Handle all server side logic
+- Sign In
+- Authentication 
+- Stripe 
+- Form submission 
+
+
+Example code:
+
+
+import { verifyUserCredentials } from '../../utils/auth';
+
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    // Extract login data from the request body
+    const { username, password } = req.body;
+
+    try {
+      // Use a utility function to verify credentials against the database
+      const user = await verifyUserCredentials(username, password);
+
+      if (user) {
+        // Create session or JWT token, etc.
+        res.status(200).json({ message: 'Login successful', user });
+      } else {
+        // Incorrect credentials, handle accordingly
+        res.status(401).json({ message: 'Login failed' });
+      }
+    } catch (error) {
+      // Handle any unexpected errors
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  } else {
+    // If not a POST request, respond with method not allowed
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}

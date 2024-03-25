@@ -8,18 +8,18 @@ import ScrollAnimationWrapper from "./Layout/ScrollAnimationWrapper";
 const Hero = ({
   listUser = [
     {
-      name: "Users",
-      number: "390",
+      name: "Podcasts",
+      number: "10,000",
       icon: "/assets/Icon/heroicons_sm-user.svg",
     },
     {
-      name: "Locations",
+      name: "Hours Saved Weekly",
       number: "20",
       icon: "/assets/Icon/gridicons_location.svg",
     },
     {
-      name: "Server",
-      number: "50",
+      name: "Past Newsletters",
+      number: "100",
       icon: "/assets/Icon/bx_bxs-server.svg",
     },
   ],
@@ -37,11 +37,10 @@ const Hero = ({
             variants={scrollAnimation}>
             <div className=" flex flex-col justify-center items-start row-start-2 sm:row-start-1">
               <h1 className="text-3xl lg:text-4xl xl:text-5xl font-medium text-black-600 leading-normal">
-                Want anything to be easy with <strong>LaslesVPN</strong>.
+                Never Miss A Podcast Again with <strong>Synopsis</strong>.
               </h1>
-              <p className="text-black-500 mt-4 mb-6">
-                Provide a network for all your needs with ease and fun using
-                LaslesVPN discover interesting features from us.
+              <p className="text-lg text-black-500 mt-6 mb-6">
+                A weekly newsletter for every new podcast episode from your favorite creators. <strong>Choose the creators and customize your newsletter.</strong>
               </p>
               <ButtonPrimary>Get Started</ButtonPrimary>
             </div>
