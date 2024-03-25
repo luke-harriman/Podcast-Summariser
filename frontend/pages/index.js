@@ -3,6 +3,7 @@ import Pricing from "../components/Pricing";
 import Hero from "../components/Hero";
 import Layout from "../components/Layout/Layout";
 import SeoHead from "../components/SeoHead";
+import Examples from "../components/Examples";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <Hero />
         <Feature />
         <Pricing />
+        <Examples />
       </Layout>
     </>
   );
