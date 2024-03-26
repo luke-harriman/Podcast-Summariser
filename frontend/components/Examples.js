@@ -10,13 +10,13 @@ const blogPosts = [
   },
   {
     title: 'Finance Newsletter',
-    description: 'Bloomberg Survaillence, We Study Billionaires & Planet Money.',
+    description: 'We Study Billionaires, All-In Podcast & Real Vision.',
     href: '/newsletter/finance'
   },
   {
-    title: 'AI & Tech Newsletter',
-    description: 'Lex Fridman, a16z & This Week in Machine Learning.',
-    href: '/newsletter/ai-tech'
+    title: 'General Knowledge Newsletter',
+    description: 'Lex Freidman, The Joe Rogan Experience & Jordan Peterson.',
+    href: '/newsletter/general-knowledge'
   },
 ];
 
