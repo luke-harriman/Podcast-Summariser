@@ -30,7 +30,7 @@ const Examples = () => {
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pb-20">
         {blogPosts.map((post, index) => (
           <div key={index} className="border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
-            <Link href={post.href} passHref>
+            <Link href={post.href} legacyBehavior>
               <a className="block rounded-lg hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-center rounded-t-lg bg-orange-500" style={{ height: '200px' }}>
                   <h3 className="text-xl font-bold text-white">{post.title}</h3>
