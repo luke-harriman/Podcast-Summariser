@@ -4,5 +4,12 @@ Pillow
 transformers
 torch
 torchvision
-opencv-python
+opencv-python==4.5.5.62 
 timm
+opencv-python-headless==4.5.5.62
+openai
+ffmpeg-python
+git+https://github.com/openai/whisper.git
+python-dotenv
+psycopg2
+scikit-image

@@ -1,112 +1,100 @@
 import os
-import json
 import cv2
-import random
 from yt_dlp import YoutubeDL
-from transformers import DetrImageProcessor, AutoModelForObjectDetection, DetrForObjectDetection
-from PIL import Image, ImageDraw, ImageFont
+from transformers import DetrImageProcessor, DetrForObjectDetection
 from PIL import Image
 import numpy as np
 import torch
-import torch.nn.functional as F
+import io
+import tempfile
+import shutil
+import uuid
+import time
+from image_similarity import get_image, compare_images, find_similar_images
 
 
 os.environ['PAFY_BACKEND'] = 'internal'
 
-# Load the fine-tuned model and image processor. The test for this model is in test.py
-CHECKPOINT_DIR = '/Users/lukeh/Desktop/python_projects/youtube_scraper/model/tb_logs/my_model/version_2/checkpoints/epoch=49-step=200.ckpt'
-num_labels = 1
-model = DetrForObjectDetection.from_pretrained(
-    'facebook/detr-resnet-50', 
-    num_labels=num_labels,
-    ignore_mismatched_sizes=True
-)
-checkpoint = torch.load(CHECKPOINT_DIR, map_location='cpu')
-adjusted_state_dict = {key.replace("model.", ""): value for key, value in checkpoint['state_dict'].items()}
-model.load_state_dict(adjusted_state_dict, strict=False)
+model_weights_save_path = "/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/model/model"
+model = DetrForObjectDetection.from_pretrained(model_weights_save_path)
 model.eval()
-image_processor = DetrImageProcessor.from_pretrained('facebook/detr-resnet-50')
 
-def get_random_timestamps(duration, num_screenshots=100):
-    timestamps = sorted(random.sample(range(int(duration)), num_screenshots))
-    return timestamps
+image_processor_save_path = "/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/model/image_processor"
+image_processor = DetrImageProcessor.from_pretrained(image_processor_save_path)
 
-def detect_and_save_charts(frame, output_dir, screenshot_index):
-    """Detect charts in an image and save the cropped chart images."""
-    # Convert frame from numpy array to PIL Image
-    image = Image.fromarray(frame)
-    
-    # Process the image through the model
-    inputs = image_processor(images=image, return_tensors="pt").to(model.device)
-    with torch.no_grad():
-        outputs = model(**inputs)
-
-
-    # Since there's no 'pred_logits', use 'logits' and 'pred_boxes' directly from the model's output
-    scores = outputs.logits.squeeze(-1).softmax(-1)[:, :, 1]  # Assuming index 1 represents charts
-    boxes = outputs.pred_boxes.squeeze(0).detach().cpu().numpy()
-
-    # Threshold for determining chart detections
-    detection_threshold = 0.51
-
-    # Process each detection
-    for i, (score, box) in enumerate(zip(scores.squeeze(0), boxes)):
-        if score > detection_threshold:
-            x_min, y_min, box_width, box_height = box
-            x_max = x_min + box_width
-            y_max = y_min + box_height
-
-            x_min = max(0, np.floor(x_min * image.width).astype(int))
-            y_min = max(0, np.floor(y_min * image.height).astype(int))
-            x_max = min(image.width, np.ceil(x_max * image.width).astype(int))
-            y_max = min(image.height, np.ceil(y_max * image.height).astype(int))
-
-            cropped_image = image.crop((x_min, y_min, x_max, y_max))
-            cropped_image_path = os.path.join(output_dir, f'chart_{screenshot_index}_{i}.png')
-            cropped_image.save(cropped_image_path)
-            print(f"Chart saved: {cropped_image_path}")
-
-def process_video_stream(url, output_dir, screenshot_interval):
-    ydl_opts = {
-        'format': 'bestvideo',
-        'simulate': True,
-        'quiet': True,
-        'skip_download': True,
-    }
-    
+def download_video(url):
+    ydl_opts = {'format': 'bestvideo', 'outtmpl': tempfile.mktemp(dir='/tmp', suffix='.mp4')}
     with YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(url, download=False)
-        video_url = info_dict.get("url", None)
-        duration = info_dict.get("duration", None)
-    
-    if not video_url or duration is None:
-        print("Failed to fetch video URL or duration.")
-        return
+        info_dict = ydl.extract_info(url, download=True)
+    return info_dict['requested_downloads'][0]['filepath'], info_dict['duration']
 
-    cap = cv2.VideoCapture(video_url)
+def extract_frames(video_path, interval):
+    cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
-
-    # Calculate the number of frames to skip to adhere to the screenshot_interval
-    frames_to_skip = int(fps * screenshot_interval)
-
-    captured_screenshots = 0
+    frames_to_skip = int(fps * interval)
     current_frame = 0
+    timestamps = []
+    images = []
     while True:
         ret, frame = cap.read()
         if not ret:
             break
-
-        # Take a screenshot at the specified interval
         if current_frame % frames_to_skip == 0:
-            # Save Frame
-            frame_path = os.path.join(output_dir, f'frame_{current_frame // frames_to_skip}.png')
-            cv2.imwrite(frame_path, frame)
-            print(f"Frame saved: {frame_path}")
-
-            # Save Object
-            detect_and_save_charts(frame, output_dir, current_frame // frames_to_skip)
-            captured_screenshots += 1
-
+            timestamp = current_frame / fps
+            timestamps.append(timestamp)
+            images.append(frame)
         current_frame += 1
-
     cap.release()
+    return timestamps, images
+
+def process_frames(images, timestamps):
+    chart_details = []
+    previous_images = []  # Store numpy arrays of previous images for comparison
+    for image, timestamp in zip(images, timestamps):
+        pil_image = Image.fromarray(image)
+        inputs = image_processor(images=pil_image, return_tensors="pt")
+        outputs = model(**inputs)
+        target_sizes = torch.tensor([pil_image.size[::-1]])
+        results = image_processor.post_process_object_detection(outputs, threshold=0.5, target_sizes=target_sizes)[0]
+        
+        for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
+            if score.item() > 0.95 and label.item() == 1:  # Assuming label 1 is for charts
+                cropped_image = pil_image.crop(box.tolist())
+                cropped_img_array = np.array(cropped_image.convert('RGB'))  # Convert to numpy array
+
+                # Check for similarity with previous images
+                is_duplicate = False
+                for prev_img_array in previous_images:
+                    if compare_images(prev_img_array, cropped_img_array) > 0.95:
+                        is_duplicate = True
+                        break
+                if not is_duplicate:
+                    previous_images.append(cropped_img_array)
+                    chart_details.append([timestamp, cropped_image])
+    return chart_details
+
+def process_video(url, screenshot_interval):
+    video_path, _ = download_video(url)
+    timestamps, frames = extract_frames(video_path, screenshot_interval)
+    charts_data = process_frames(frames, timestamps)
+    os.remove(video_path)  # Cleanup downloaded video
+    return charts_data
+
+if __name__ == '__main__':
+    start_time = time.time()
+    url = 'https://www.youtube.com/watch?v=QAAfDQx8DDQ'
+    charts_data = process_video(url, 10)
+
+    # Here we ensure all processing is done before calculating end_time
+    end_time = time.time()  # Define end_time immediately after the process
+    total_time = end_time - start_time
+
+    for index, (timestamp, img) in enumerate(charts_data):
+        if isinstance(img, np.ndarray):  # Check if the image is a numpy array
+            img = Image.fromarray(img.astype('uint8'), 'RGB')
+        filename = f"images/chart_{timestamp}_{uuid.uuid4()}.png"
+        img.save(filename)
+        print(f"Saved chart image {index + 1} at timestamp {timestamp} to {filename}")
+
+    print(f'Total Time: {total_time}')
+
