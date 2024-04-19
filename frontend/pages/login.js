@@ -12,26 +12,46 @@ export default function Login() {
     password: ''
   });
 
+  const [loginError, setLoginError] = useState(''); // State to hold login error messages
+
   async function handleSubmit(event) {
-    event.preventDefault(); // Prevent the default form submission
+    console.log("handleSubmit called");
+    event.preventDefault();
+    console.log("Form submission prevented.");
   
     if (!userData.email || !userData.password) {
-      console.error('Email and password are required.');
+      console.log("Error: Email and password are required.");
+      setLoginError('Email and password are required.');
       return;
     }
   
+    console.log("Sending POST request to /api/login with body:", JSON.stringify(userData));
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
-  
+    
+    console.log("Response received:", response.status);
+    
     if (response.ok) {
+      console.log("Login successful, redirecting...");
       Router.push('/profile');
     } else {
       const errorData = await response.json();
-      console.error(errorData.error);
+      console.error("Login failed:", errorData.error);
+      setLoginError(errorData.error || 'An unexpected error occurred');
     }
+  }
+
+  function handleEmailChange(e) {
+    console.log("Updating email:", e.target.value);
+    setUserData({ ...userData, email: e.target.value });
+  }
+  
+  function handlePasswordChange(e) {
+    console.log("Updating password:", e.target.value);
+    setUserData({ ...userData, password: e.target.value });
   }
 
   return (
@@ -41,22 +61,18 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="mb-4">
             <label htmlFor="email" className="block text-lg font-medium mb-2">Email</label>
-            <input id="email" type="email" value={userData.email} onChange={(e) => setUserData({ ...userData, email: e.target.value })} className="form-input w-full text-lg p-3 border rounded" required />
+            <input id="email" type="email" value={userData.email} onChange={handleEmailChange} className="form-input w-full text-lg p-3 border rounded" required />
           </div>
           <div className="mb-6">
             <label htmlFor="password" className="block text-lg font-medium mb-2">Password</label>
-            <input id="password" type="password" value={userData.password} onChange={(e) => setUserData({ ...userData, password: e.target.value })} className="form-input w-full text-lg p-3 border rounded" required />
+            <input id="password" type="password" value={userData.password} onChange={handlePasswordChange} className="form-input w-full text-lg p-3 border rounded" required />
           </div>
-          <div className="flex justify-center"> {/* Add this div */}
-            <ButtonOutline
-                href="/login"
-                style={{ width: '300px' }}
-                className="additional-class-names"
-                legacyBehavior
-                >
-                Log In
+          {loginError && <div className="text-red-500 text-center mb-2">{loginError}</div>}
+          <div className="flex justify-center">
+            <ButtonOutline type="submit" style={{ width: '300px' }} className="additional-class-names">
+              Log In
             </ButtonOutline>
-            </div>
+          </div>
           <div className="text-center text-sm mt-4">
             <Link href="/signup" legacyBehavior>
               <a className="text-blue-100 hover:text-blue-800 transition duration-300">

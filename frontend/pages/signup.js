@@ -11,7 +11,7 @@ import Link from 'next/link';
 export default function Signup() {
   const [userData, setUserData] = useState({
     email: '',
-    fullName: '',
+    full_name: '',
     password: ''
   });
 
@@ -19,7 +19,7 @@ export default function Signup() {
     event.preventDefault(); // Prevent the default form submission
   
     // Add form validation logic here
-    if (!userData.email || !userData.fullName || !userData.password) {
+    if (!userData.email || !userData.full_name || !userData.password) {
       // handle empty fields
       console.error('All fields are required.');
       return;
@@ -69,25 +69,46 @@ export default function Signup() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
                 <label htmlFor="email" className="block text-lg font-medium mb-2">Email</label>
-                <input id="email" type="email" className="form-input w-full text-lg p-3 border rounded" />
+                <input
+                  id="email"
+                  type="email"
+                  value={userData.email}
+                  onChange={e => setUserData({...userData, email: e.target.value})}
+                  className="form-input w-full text-lg p-3 border rounded"
+                  required
+                />
               </div>
               <div className="mb-4">
-                <label htmlFor="fullName" className="block text-lg font-medium mb-2">Full Name</label>
-                <input id="fullName" type="text" className="form-input w-full text-lg p-3 border rounded" />
+                <label htmlFor="full_name" className="block text-lg font-medium mb-2">Full Name</label>
+                <input
+                  id="full_name"
+                  type="text"
+                  value={userData.full_name}
+                  onChange={e => setUserData({...userData, full_name: e.target.value})}
+                  className="form-input w-full text-lg p-3 border rounded"
+                  required
+                />
               </div>
               <div className="mb-6">
                 <label htmlFor="password" className="block text-lg font-medium mb-2">Password</label>
-                <input id="password" type="password" className="form-input w-full text-lg p-3 border rounded" />
+                <input
+                  id="password"
+                  type="password"
+                  value={userData.password}
+                  onChange={e => setUserData({...userData, password: e.target.value})}
+                  className="form-input w-full text-lg p-3 border rounded"
+                  required
+                />
               </div>
-                <div className="flex justify-center"> {/* Add this div */}
+              <div className="flex justify-center">
                 <ButtonOutline
-                    href="/login"
-                    style={{ width: '300px' }}
-                    className="additional-class-names"
-                    >
-                    Create Account
+                  buttonType="submit"
+                  style={{ width: '300px' }}
+                  className="additional-class-names" // Add any specific classes you might need
+                >
+                  Create Account
                 </ButtonOutline>
-                </div>
+              </div>
             </form>
             <div className="text-center text-sm mt-4">
             <Link href="/login" legacyBehavior>
