@@ -1,0 +1,50 @@
+.agentsContainer {
+  padding: 2rem; /* Add padding around the content */
+  min-height: 100vh; /* Ensure it takes the minimum height of the full viewport */
+  margin-left: 1rem; /* Adjusts distance from the navbar */
+  margin-top: 1rem; /* Adjusts distance from top of screen */
+  margin-bottom: 1rem; /* Adjusts distance from bottom of screen */
+  margin-right: 1rem; /* Adjusts distance from right side of screen */
+  background-color: #ffffff; /* Background color for the content area */
+  width: 75%;
+}
+
+.column > * + * {
+  margin-top: 1rem; /* Add top margin to all direct children except the first one */
+}
+
+.column {
+  flex: 1; /* Each column takes up equal space */
+  padding: 1rem; /* Add padding inside each column */
+}
+
+.heading {
+  font-size: 1.5rem; /* Large font size for headings */
+  font-weight: bold; /* Bold font weight for headings */
+  margin-bottom: 1rem; /* Space below the heading */
+  color: #333333; /* Color for the heading text */
+}
+
+.columnsContainer {
+  display: flex;
+  flex-direction: row; /* Align columns horizontally */
+  flex-wrap: wrap; /* Allow columns to wrap */
+  gap: 1rem; /* Space between columns */
+  margin-top: 1rem; /* Space above the columns container */
+}
+
+.componentSpacing {
+  margin-bottom: 5rem; /* Adjust the value for the desired spacing */
+}
+
+.headingLarge {
+  font-size: 1.5rem; /* or whatever size you prefer */
+  margin-bottom: 0.5rem; /* Adjust space above the description */
+}
+
+.descriptionText {
+  margin-top: 0.5rem; /* Adjust space below the heading */
+  margin-bottom: 1rem; /* Adjust space above the SearchBar component */
+  color: #666; /* Choose your desired color */
+  font-size: 1rem; /* Choose your desired size */
+}

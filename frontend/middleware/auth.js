@@ -15,14 +15,3 @@ export default function auth(req, res, next) {
     return res.status(401).end('Not authenticated');
   }
 }
-
-
-// In the API routes, use this middleware to protect the api logic so it can't be called by people that aren't authenticated.
-
-// import auth from '../../middleware/auth';
-
-// export default function handler(req, res) {
-//   auth(req, res, () => {
-//     // The protected API logic here
-//   });
-// }

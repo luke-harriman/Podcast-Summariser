@@ -12,3 +12,9 @@ model users {
   email    String   @unique
   password String
 }
+
+model creator_lists {
+  email           String    @unique
+  creator_link    String
+  creator_name    String
+}

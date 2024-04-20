@@ -16,16 +16,13 @@ export default function Signup() {
   });
 
   async function handleSubmit(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
   
-    // Add form validation logic here
     if (!userData.email || !userData.full_name || !userData.password) {
-      // handle empty fields
       console.error('All fields are required.');
       return;
     }
   
-    // If validation passes, proceed to submit data
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -33,12 +30,15 @@ export default function Signup() {
     });
   
     if (response.ok) {
-      // Handle successful signup, e.g., redirect to profile page or display success message
-      Router.push('/profile');
+      Router.push('/platform');
     } else {
-      // Handle errors, e.g., display an error message to the user
       const errorData = await response.json();
-      console.error(errorData.error);
+      if (errorData.error === "Email already exists") {
+        // Redirect to login if the email already exists
+        Router.push('/login');
+      } else {
+        console.error(errorData.error);
+      }
     }
   }
 
@@ -102,7 +102,7 @@ export default function Signup() {
               </div>
               <div className="flex justify-center">
                 <ButtonOutline
-                  buttonType="submit"
+                  type="submit"
                   style={{ width: '300px' }}
                   className="additional-class-names" // Add any specific classes you might need
                 >

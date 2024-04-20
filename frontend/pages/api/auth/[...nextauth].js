@@ -15,12 +15,10 @@ export default NextAuth({
       },
       authorize: async (credentials) => {
         const user = await prisma.users.findUnique({
-          where: {
-            email: credentials.username // assuming username is the email
-          }
+          where: { email: credentials.username }
         });
-
-        if (user && await bcrypt.compare(credentials.password, users.password)) {
+      
+        if (user && await bcrypt.compare(credentials.password, user.password)) {
           return user;
         } else {
           return null;
@@ -29,7 +27,6 @@ export default NextAuth({
     }),
   ],
   
-  // Add this line to your NextAuth configuration
   secret: process.env.NEXTAUTH_SECRET,
 
   session: {

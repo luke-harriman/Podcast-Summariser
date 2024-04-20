@@ -15,42 +15,27 @@ export default function Login() {
   const [loginError, setLoginError] = useState(''); // State to hold login error messages
 
   async function handleSubmit(event) {
-    console.log("handleSubmit called");
     event.preventDefault();
-    console.log("Form submission prevented.");
-  
-    if (!userData.email || !userData.password) {
-      console.log("Error: Email and password are required.");
-      setLoginError('Email and password are required.');
-      return;
-    }
-  
-    console.log("Sending POST request to /api/login with body:", JSON.stringify(userData));
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
     
-    console.log("Response received:", response.status);
     
     if (response.ok) {
-      console.log("Login successful, redirecting...");
-      Router.push('/profile');
+      Router.push('/platform');
     } else {
       const errorData = await response.json();
-      console.error("Login failed:", errorData.error);
       setLoginError(errorData.error || 'An unexpected error occurred');
     }
   }
 
   function handleEmailChange(e) {
-    console.log("Updating email:", e.target.value);
     setUserData({ ...userData, email: e.target.value });
   }
   
   function handlePasswordChange(e) {
-    console.log("Updating password:", e.target.value);
     setUserData({ ...userData, password: e.target.value });
   }
 
@@ -69,9 +54,9 @@ export default function Login() {
           </div>
           {loginError && <div className="text-red-500 text-center mb-2">{loginError}</div>}
           <div className="flex justify-center">
-            <ButtonOutline type="submit" style={{ width: '300px' }} className="additional-class-names">
-              Log In
-            </ButtonOutline>
+          <ButtonOutline type="submit" style={{ width: '300px' }} className="additional-class-names">
+            Log In
+          </ButtonOutline>
           </div>
           <div className="text-center text-sm mt-4">
             <Link href="/signup" legacyBehavior>
