@@ -9,7 +9,7 @@ generator client {
 
 model users {
   full_name String
-  email    String   @unique
+  email    String @unique
   password String
 }
 
@@ -17,4 +17,10 @@ model creator_lists {
   email           String    @unique
   creator_link    String
   creator_name    String
+}
+
+model agent_configurations {
+  email       String   @unique
+  key_words   String[]
+  multi_media Boolean
 }

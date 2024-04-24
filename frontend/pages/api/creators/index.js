@@ -1,9 +1,14 @@
 // pages/api/creators/index.js
 import { PrismaClient } from '@prisma/client';
+import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
+    // Adding simple validation in update.js
+    if (!email || !creatorsToAdd || !creatorsToRemove) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
   if (req.method === 'POST') {
     try {
       const { email, creator_name, creator_link } = req.body;

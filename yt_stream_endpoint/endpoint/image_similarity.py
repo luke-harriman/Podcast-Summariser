@@ -7,17 +7,18 @@ from skimage.transform import resize
 def get_image(path):
     """Load an image and prepare it for SSIM comparison, ensuring it is returned as a numpy array."""
     img = Image.open(path)
-    img = img.resize((1024, 1024), Image.Resampling.LANCZOS)  # Resize to maintain detail
-    img = img.convert('RGB')  # Use RGB to keep color information
-    img_array = np.array(img)  # Convert to a NumPy array
+    # Resize to maintain detail and use RGB to keep color information
+    img = img.resize((1024, 1024), Image.Resampling.LANCZOS)
+    img = img.convert('RGB')
+    img_array = np.array(img) 
     return img_array
 
 def compare_images(img1, img2, target_size=(256, 256)):
     """Compare two images using SSIM on RGB after resizing them to the same dimensions."""
     # Ensure both images are numpy arrays
-    if isinstance(img1, Image.Image):  # Check if img1 is a PIL Image
+    if isinstance(img1, Image.Image): 
         img1 = np.array(img1.convert('RGB'))
-    if isinstance(img2, Image.Image):  # Check if img2 is a PIL Image
+    if isinstance(img2, Image.Image): 
         img2 = np.array(img2.convert('RGB'))
     
     # Resize images to a common size

@@ -1,0 +1,6 @@
+ram_analysis/
+legacy/
+__pycache__/
+.env
+test_requests.py
+query_pg.py

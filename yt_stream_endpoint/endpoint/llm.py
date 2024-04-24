@@ -3,22 +3,20 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-
-with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
+# with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
+#     prompt = prompt.read()
+with open('/app/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
     prompt = prompt.read()
-
-
 load_dotenv()
 key = os.getenv('OPENAI_API_KEY')
-
 client = OpenAI(
     api_key=key
 )
 
 def apply_llm(dictionary):
+    """Open an OpenAI client to interact with the API. Use the API to generate summaries."""
     for item in dictionary:
         input = f'Topic Header: {item["chapter"]} \n {item["text_data"]}'  # Assuming keys "topic_header" and "text_data"
-
         response = client.chat.completions.create(
         model = "gpt-4-turbo-preview",
         messages=[
@@ -27,26 +25,6 @@ def apply_llm(dictionary):
             {"role": "system", "content": f"Remove unnecessary words and phrases. Make sure to include quotes, data points and numbers that back up the points made. Make sure the podcast title is not mentioned in the response and the response does not end with a summary."}
             ]
         )
-
         item['text_data'] = response.choices[0].message.content
-    
     return dictionary 
-
-if __name__ == '__main__':
-    example_data = [
-        {
-            "topic_header": "Header",
-            "text_data": "Dam, fuck!"
-        }, 
-        {
-            "topic_header": "Header",
-            "text_data": "Dam, fuck!"
-        }
-    ]
-    result = apply_llm(example_data)
-
-
-    with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/example/transformed_data.json', 'w') as f:
-        json.dump(result, f)
-
 

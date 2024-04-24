@@ -1,5 +1,6 @@
 // pages/api/creators/[email].js
 import { PrismaClient } from '@prisma/client';
+import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 

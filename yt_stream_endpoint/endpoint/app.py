@@ -1,91 +1,95 @@
-from flask import Flask, request, render_template, send_from_directory
-from stream_video import process_video
-from transcribe_video import download_audio, transcribe_audio, garbage_collection
-from openai import OpenAI
+from flask import Flask, request, jsonify
+from media_processing import download_video_and_audio, split_audio_video, process_frames, extract_frames, transcribe_audio, garbage_collection
 from structure_text import generate_topic_headers
 from llm import apply_llm
 from insert import insert_data
-from config import config 
-from transformers import DetrImageProcessor, AutoModelForObjectDetection
-from yt_dlp import YoutubeDL
-from PIL import Image, ImageDraw, ImageFont
 import os
-import cv2
-import random
-import numpy as np
-import torch
-import torch.nn.functional as F
-import whisper
-import json
-import io
-import uuid
-import time
-import subprocess
-import math
-import tempfile
 import time
 from dotenv import load_dotenv
-from image_similarity import get_image, compare_images, find_similar_images
-
+from openai import OpenAI
+import atexit
+# from memory_profiler import profile
 
 app = Flask(__name__)
 
-# Ensure the output directary for screenshots and charts exists
+# with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
+#     prompt = prompt.read()
 
-with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
+with open('/app/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
     prompt = prompt.read()
 
 load_dotenv()
 key = os.getenv('OPENAI_API_KEY')
-
-client = OpenAI(
-    api_key=key
-)
+client = OpenAI(api_key=key)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['POST'])
 def index():
     if request.method == 'POST':
-        start_time = time.time()
-        yt_url = request.form.get('youtube_url')
-        if yt_url:
-            # Adjust process_video_stream to return the binary data for each frame and the frame number
-            chart_details = process_video(yt_url, 10)  
+        try:
+            start_time = time.time()
 
-            # audio_stream_process = capture_audio_stream(yt_url)
-            # subtitles, word_timing = transcribe_audio(audio_stream_process)
+            content = request.get_json(silent=True)
+            if not content or 'youtube_url' not in content:
+                return jsonify({"error": "YouTube URL is required"}), 400
+            yt_url = content['youtube_url']
 
-            audio_file_path = download_audio(yt_url)
-            try:
-                subtitles, word_timing = transcribe_audio(audio_file_path)
-            finally:
-                deleted_file_path = garbage_collection(audio_file_path)
+            # Download video and audio together
+            print('Downloading Video and Audio')
+            entire_video_path = download_video_and_audio(yt_url)
+            video_path, audio_path = split_audio_video(entire_video_path)
 
+            # Process video to extract frames and detect charts
+            download_time = time.time() 
+            print(f'Processing Video for Charts: {download_time - start_time} seconds')
+            frames = extract_frames(video_path, 10, './frames')
+            chart_details = process_frames(frames)
+
+            # Transcribe audio
+            process_chart_time = time.time() 
+            print(f'Transcribe Audio: {process_chart_time - download_time} seconds')
+            subtitles, word_timing = transcribe_audio(audio_path)
+
+            # Generate structured data for summaries
+            transcribe_audio_time = time.time() 
+            print(f'Generating Topic Headers: {transcribe_audio_time - process_chart_time} seconds')
             structured_data = generate_topic_headers(subtitles, yt_url, word_timing)
-            with open('./structured_data.json', 'w') as file:
-                json.dump(structured_data, file, indent=4)
 
+            # Generate summaries using LLM
+            print('Applying LLM')
             llm_generated_data = apply_llm(structured_data)
 
-            # Attach array of bytea binary images. llm_generated_data is a dictionary.
+            # Append charts to the discussion data
+            print('Appending Charts to Data')
             for item in llm_generated_data:
                 charts_in_chapter = []
-
                 for chart in chart_details:
                     chapter_start = item['start_time']
                     chapter_end = item['end_time']
                     chart_timestamp = chart[0]
                     if chapter_start <= chart_timestamp <= chapter_end:
                         charts_in_chapter.append(chart[1])
-                
                 item['images'] = charts_in_chapter
+            
+            print('Performing Garbage Collection')
+            garbage_collection(entire_video_path)
+            garbage_collection(video_path)
+            garbage_collection(audio_path)
 
-            # Insert in postgres. 
+            # Insert data into PostgreSQL
+            print('Inserting Data into Postgres')
             for item in llm_generated_data:
                 insert_data(item)
 
+            # Garbage collection for video and audio files
+
             end_time = time.time()
             total_time = end_time - start_time
-            return {"Status": f"Successfully loaded data into postgres. Process took {total_time}. Deleted audio file at {deleted_file_path}"}
+            return jsonify({"Status": f"Successfully loaded data into postgres. Process took {total_time} seconds."}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"message": "Method Not Allowed"}), 405
+
 if __name__ == "__main__":
     app.run(debug=True)

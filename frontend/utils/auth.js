@@ -1,42 +1,46 @@
-import { serialize, parse } from 'cookie';
-import { sign, verify } from 'jsonwebtoken';
+// import { serialize, parse } from 'cookie';
+// import { sign, verify } from 'jsonwebtoken';
 
-const TOKEN_NAME = 'auth_token';
-const MAX_AGE = 60 * 60 * 8; // 8 hours
+// const TOKEN_NAME = 'auth_token';
+// const MAX_AGE = 60 * 60 * 8; // 8 hours
 
-export function setLoginSession(res, session) {
-  const token = sign(session, process.env.JWT_SECRET, { expiresIn: MAX_AGE });
-  const cookie = serialize(TOKEN_NAME, token, {
-    maxAge: MAX_AGE,
-    expires: new Date(Date.now() + MAX_AGE * 1000),
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
-  });
+// export function setLoginSession(res, session) {
+//   const token = sign(session, process.env.JWT_SECRET, { expiresIn: MAX_AGE });
+//   const cookie = serialize(TOKEN_NAME, token, {
+//     maxAge: MAX_AGE,
+//     expires: new Date(Date.now() + MAX_AGE * 1000),
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === 'production',
+//     path: '/',
+//     sameSite: 'lax',
+//   });
 
-  res.setHeader('Set-Cookie', cookie);
-}
+//   res.setHeader('Set-Cookie', cookie);
+// }
 
-export function removeLoginSession(res) {
-  const cookie = serialize(TOKEN_NAME, '', {
-    maxAge: -1,
-    path: '/',
-  });
+// export function removeLoginSession(res) {
+//   const cookie = serialize(TOKEN_NAME, '', {
+//     maxAge: -1,
+//     path: '/',
+//   });
 
-  res.setHeader('Set-Cookie', cookie);
-}
+//   res.setHeader('Set-Cookie', cookie);
+// }
 
-export function parseLoginSession(req) {
-  if (!req.cookies) return;
+// export function parseLoginSession(req) {
+//   if (!req.cookies) return;
 
-  const token = req.cookies[TOKEN_NAME];
-  if (!token) return;
+//   const token = req.cookies[TOKEN_NAME];
+//   if (!token) return;
 
-  try {
-    const session = verify(token, process.env.JWT_SECRET);
-    return session;
-  } catch (error) {
-    return;
-  }
-}
+//   try {
+//     const session = verify(token, process.env.JWT_SECRET);
+//     return session;
+//   } catch (error) {
+//     return;
+//   }
+// }
+
+
+// Removed these functions as they create a custom authentification system that is not needed for this project. For now, we will use the NextAuth.js library default for authentication.
+// However, if custom authentification is needed in the future, these functions can be added back in and modified as needed.

@@ -1,17 +1,22 @@
-import jwt from 'jsonwebtoken';
+// // middleware/auth.js
+// import jwt from 'jsonwebtoken';
 
-export default function auth(req, res, next) {
-  const { token } = req.cookies;
-  
-  if (!token) {
-    return res.status(401).end('Not authenticated');
-  }
-  
-  try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.status(401).end('Not authenticated');
-  }
-}
+// const auth = (req, res) => {
+//   const { auth_token } = req.cookies;
+
+//   if (!auth_token) {
+//     res.status(401).end('Not authenticated');
+//     return false;
+//   }
+
+//   try {
+//     const user = jwt.verify(auth_token, process.env.JWT_SECRET);
+//     req.user = user;
+//     return true;
+//   } catch (error) {
+//     res.status(401).end('Not authenticated');
+//     return false;
+//   }
+// };
+
+// export default auth;

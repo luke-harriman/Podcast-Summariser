@@ -15,6 +15,7 @@ conn_params = {
 }
 
 def fetch_images():
+    """A function to query the binary image data from postgrs and render it using PIL."""
     try:
         # Connect to your postgres DB
         conn = psycopg2.connect(**conn_params)
@@ -32,15 +33,11 @@ def fetch_images():
             for row in rows:
                 start_time, end_time, images = row
                 
-                # Assuming images is a list of BYTEA elements
                 for i, img_data in enumerate(images):
                     # Convert binary data to image
                     image = Image.open(io.BytesIO(img_data))
-                    
                     # Display the image
                     image.show(title=f"{start_time}-{end_time}")
-                    # Optional: save the image to disk
-                    # image.save(f"image_{start_time}_{end_time}_{i}.png")
                     
     except Exception as e:
         print(f"An error occurred: {e}")

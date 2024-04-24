@@ -27,40 +27,27 @@ export default NextAuth({
     }),
   ],
   
-  secret: process.env.NEXTAUTH_SECRET,
 
   session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+    updateAge: 24 * 60 * 60, // 24 hours in seconds
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
   },
-
   callbacks: {
     jwt: async ({ token, user }) => {
-      // Add user info to the token once signed in
       if (user) {
         token.id = user.id;
+        token.email = user.email;
       }
       return token;
     },
     session: async ({ session, token }) => {
-      // Pass the user ID to the session object
-      session.user.id = token.id;
+      session.user = { id: token.id, email: token.email };
       return session;
     },
   },
-
-  // Ensure your database connection URL is properly configured
   database: process.env.DATABASE_URL,
 });

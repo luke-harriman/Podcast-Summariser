@@ -1,12 +1,34 @@
+import { useSession, getSession } from "next-auth/react";
 import Layout from '../../components/Platform/Layout';
 import styles from '../../styles/agents.module.css';
 import SearchBar from '../../components/Platform/SearchBar';
-import creators from '../../data/creators.json'; 
-import React, { useState } from 'react';
-import searchBarStyles from '../../styles/searchbar.module.css'; // import the CSS module for SearchBar styling
+import AgentConfiguration from '../../components/Platform/AgentConfiguration';
+import React, { useEffect, useState } from 'react';
+import searchBarStyles from '../../styles/searchbar.module.css';
 
 const Agents = () => {
-    const userEmail = 'luke.m.h.002@gmail.com';
+    const { data: session, status } = useSession();
+    const [userEmail, setUserEmail] = useState('');
+  
+    useEffect(() => {
+      if (session) {
+        setUserEmail(session.user.email);
+      }
+    }, [session]);
+
+    useEffect(() => {
+        if (session?.user?.email) {
+          setUserEmail(session.user.email);
+        }
+      }, [session]);
+  
+    if (status === "loading") {
+      return <p>Loading...</p>;
+    }
+  
+    if (status === "unauthenticated") {
+      return <p>You are not authenticated</p>;
+    }
   
     return (
         <Layout>
@@ -18,9 +40,9 @@ const Agents = () => {
                   <p className={styles.descriptionText}>
                     Manage your list of creators here. Add new creators or remove existing ones to tailor your agent's newsletters. To add new creators, insert the creator's youtube username (e.g joerogan, lexfridman or allin).
                   </p>
-                  <SearchBar userEmail={userEmail} />
-                  <div className={styles.componentSpacing}></div>
+                  {userEmail && <SearchBar userEmail={userEmail} />}
                   <h2 className={styles.headingLarge}>Configuration</h2>
+                  {userEmail && <AgentConfiguration userEmail={userEmail} />}
               </div>
             </div>
           </div>
@@ -29,3 +51,20 @@ const Agents = () => {
     };
     
     export default Agents;
+
+    export async function getServerSideProps(context) {
+        const session = await getSession(context);
+      
+        if (!session) {
+          return {
+            redirect: {
+              destination: '/login',
+              permanent: false,
+            },
+          };
+        }
+      
+        return {
+          props: { session },
+        };
+      }

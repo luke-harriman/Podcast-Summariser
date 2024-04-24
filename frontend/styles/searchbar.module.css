@@ -2,8 +2,9 @@
 .container {
     display: flex;
     flex-direction: column;
-    width: 75%;
-    gap: 10px;
+    max-width: 500px;
+    margin: auto;
+    align-items: flex-start;
   }
   
   .searchContainer {
@@ -70,6 +71,34 @@
     border-radius: 50%;
     background-color: #f44336;
     color: white;
+  }
+
+  .inputContainer {
+    width: 100%; /* Full width */
+    display: flex; /* Flex container for the input and button */
+    margin-bottom: 20px; /* Space below */
+  }
+  
+  .keywordsInput {
+    flex-grow: 1; /* Input takes up available space */
+    margin-right: 10px; /* Space between input and button */
+  }
+  
+  .addButton, .saveButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .addButton {
+    background-color: #4CAF50; /* Green background for add button */
+    margin-right: 10px; /* Space to the right of the button */
+  }
+  
+  .saveButton {
+    background-color: #2196F3; /* Blue background for save button */
   }
   
   .addButton, .saveButton {
