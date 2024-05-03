@@ -24,3 +24,11 @@ model agent_configurations {
   key_words   String[]
   multi_media Boolean
 }
+
+model user_configurations {
+  email           String @unique 
+  creator_link    String[]
+  creator_name    String[]
+  key_words       String[]
+  multi_media     Boolean
+}

@@ -22,15 +22,15 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \ 
     && rm -rf /var/lib/apt/lists/*
 
-RUN git config --global http.postBuffer 524288000  # 500MB
-RUN pip install --no-cache-dir -r requirements.txt
+RUN git config --global http.postBuffer 5242880000  # 500MB
+RUN pip3.11 install --default-timeout=120 --no-cache-dir -r requirements.txt 
+# Making default time for pip install 2 minutes because my wifi is trash. 
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
 # Define environment variable
-ENV NAME World
 ENV PROJECT_ID=podcast-summariser-2020
 
 # Run app.py via Gunicorn when the container launches
-CMD exec gunicorn --bind :${PORT:-8080} --workers 2 --threads 1 --timeout 0 app:app
+CMD exec gunicorn --bind :${PORT:-8080} --workers 4 --threads 1 --timeout 3600 app:app

@@ -8,6 +8,7 @@ import time
 from dotenv import load_dotenv
 from openai import OpenAI
 import atexit
+import traceback
 # from memory_profiler import profile
 
 app = Flask(__name__)
@@ -87,7 +88,9 @@ def index():
             total_time = end_time - start_time
             return jsonify({"Status": f"Successfully loaded data into postgres. Process took {total_time} seconds."}), 200
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            traceback_details = traceback.format_exc()
+            print(f"Encountered an error: {traceback_details}")
+            return jsonify({"error": str(e), "trace": traceback_details}), 500
     else:
         return jsonify({"message": "Method Not Allowed"}), 405
 

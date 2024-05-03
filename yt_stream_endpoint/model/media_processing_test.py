@@ -1,4 +1,5 @@
 import os
+import cv2
 from yt_dlp import YoutubeDL
 from transformers import DetrImageProcessor, DetrForObjectDetection
 from io import BytesIO
@@ -8,22 +9,23 @@ import torch
 import tempfile
 import uuid
 import time
-from image_similarity import get_image, compare_images, find_similar_images
+from image_similarity_test import get_image, compare_images, find_similar_images
 import whisper
 import subprocess
 import sys
 import logging
-
+import matplotlib.pyplot as plt
+import random 
 
 # Environment and model setup
-hf_token = os.getenv('HF_TOKEN')
+HF_TOKEN="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"
 model_weights_save_path = "luke-harriman/chart_object_detection"
 image_processor_save_path = model_weights_save_path
 
 # Initialize models
-model = DetrForObjectDetection.from_pretrained(model_weights_save_path, use_auth_token=hf_token)
+model = DetrForObjectDetection.from_pretrained(model_weights_save_path, use_auth_token=HF_TOKEN)
 model.eval()
-image_processor = DetrImageProcessor.from_pretrained(image_processor_save_path, use_auth_token=hf_token)
+image_processor = DetrImageProcessor.from_pretrained(image_processor_save_path, use_auth_token=HF_TOKEN)
 
 
 def download_video_and_audio(url, download_directory='.'):
@@ -34,7 +36,7 @@ def download_video_and_audio(url, download_directory='.'):
 
 
     ydl_opts = {
-        'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]', 
+        'format': 'bestvideo+bestaudio/best',  # Ensure you get the best video and audio available
         'quiet': True,
         'verbose': False,
         'noplaylist': True,
@@ -87,17 +89,20 @@ def extract_frames(video_path, interval, output_folder):
         '-i', video_path,
         '-vf', f'fps=1/{interval}',  # Extracts one frame every 'interval' seconds
         '-q:v', '2',  # Set the quality of extracted frames
-        os.path.join(output_folder, 'frame_%04d.png')
+        os.path.join(output_folder, f'frame_{random.randint(1, 10000)}_{random.randint(1, 10000)}_%04d.png')
     ]
+
+    # os.path.join(output_folder, 'frame_%04d.png')
+
     subprocess.run(command, check=True)
 
     # Calculate timestamps based on interval
-    frame_files = sorted(os.listdir(output_folder))
-    frames = [(int(f.split('_')[1].split('.')[0]) * interval, os.path.join(output_folder, f)) for f in frame_files]
-    return frames
+    # frame_files = sorted(os.listdir(output_folder))
+    # frames = [(int(f.split('_')[1].split('.')[0]) * interval, os.path.join(output_folder, f)) for f in frame_files]
+    # return frames
 
 def process_frames(frame_data):
-    """Process extracted frames to find specific objects (charts) one by one, including timestamps."""
+    """Process extracted frames to find specific objects (charts), and show these objects."""
     chart_details = []
     previous_images = []
     for timestamp, frame_path in frame_data:
@@ -107,39 +112,20 @@ def process_frames(frame_data):
             target_sizes = torch.tensor([pil_image.size[::-1]])
             results = image_processor.post_process_object_detection(outputs, threshold=0.5, target_sizes=target_sizes)[0]
             for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
-                if score.item() > 0.95 and label.item() == 1:
+                if score.item() > 0.95 and label.item() == 1:  # Chart label assumed to be 1
                     cropped_image = pil_image.crop(box.tolist())
                     cropped_img_array = np.array(cropped_image.convert('RGB'))
+                    # Compare with previously detected images to avoid duplicates
                     if not any(compare_images(prev_img_array, cropped_img_array) > 0.95 for prev_img_array in previous_images):
                         previous_images.append(cropped_img_array)
-                        chart_details.append([timestamp, image_to_byte(cropped_image)])
+                        # Show the image
+                        plt.imshow(cropped_image)
+                        plt.title(f'Timestamp: {timestamp} seconds')
+                        plt.show()
 
         garbage_collection(frame_path)
 
     return chart_details
-
-def transcribe_audio(audio_file_path):
-    """Transcribe audio to text using OpenAI's Whisper model."""
-    model = whisper.load_model("base")
-    result = model.transcribe(audio_file_path)
-    word_timing = []
-    word_count = 0
-    next_time_mark = 10
-    if 'segments' in result:
-        for segment in result['segments']:
-            start_time = segment['start']
-            segment_word_count = len(segment['text'].split())
-            word_count += segment_word_count
-            while start_time >= next_time_mark:
-                word_timing.append([next_time_mark, word_count])
-                next_time_mark += 10
-    return result["text"], word_timing
-
-def image_to_byte(image):
-    imgByteArr = BytesIO()
-    image.save(imgByteArr, format='PNG')
-    imgByteArr.seek(0)
-    return imgByteArr.getvalue()
 
 def garbage_collection(file_path):
     if os.path.exists(file_path):
@@ -148,18 +134,32 @@ def garbage_collection(file_path):
 
 
 if __name__ == '__main__':
-    yt_url = 'https://www.youtube.com/watch?v=CVbCTkjpnPo'
-    entire_video_path = download_video_and_audio(yt_url)
-    print('Entire Video Path:', entire_video_path)
-    video_path, audio_path = split_audio_video(entire_video_path)
-    print('Video Path:', video_path)
-    print('Audio Path:', audio_path)
+    yt_url_list = [
+        'https://www.youtube.com/watch?v=HKtlezdPNAI',
+        'https://www.youtube.com/watch?v=FALlhXl6CmA',
+        'https://www.youtube.com/watch?v=1AvqcRPMt5Y',
+        'https://www.youtube.com/watch?v=6ydFDwv-n8w',
+        'https://www.youtube.com/watch?v=KdmDtqB46Jc',
+        'https://www.youtube.com/watch?v=GGlZIkT2WLA',
+        'https://www.youtube.com/watch?v=oITaI2kDIFI',
+        'https://www.youtube.com/watch?v=q9icMJ48z6U',
+        'https://www.youtube.com/watch?v=erDE2e69dlc',
+        'https://www.youtube.com/watch?v=QRZ_l7cVzzU',
+        'https://www.youtube.com/watch?v=F9cO3-MLHOM',
+        'https://www.youtube.com/watch?v=t6ETJjVNP4M',
+        'https://www.youtube.com/watch?v=8HrzoEvLWH0'
+    ]
+    for index, yt_url in enumerate(yt_url_list):
+        entire_video_path = download_video_and_audio(yt_url)
+        print('Entire Video Path:', entire_video_path)
+        video_path, audio_path = split_audio_video(entire_video_path)
+        print('Video Path:', video_path)
+        print('Audio Path:', audio_path)
 
-    print('Processing Video for Charts')
-    frame_generator = extract_frames(video_path, 10)
-    chart_details = process_frames(frame_generator)
-    size_of_list = sys.getsizeof(chart_details)  # Size of list structure
-    total_size = size_of_list + sum(sys.getsizeof(item) for item in chart_details)  # Total size including elements
-    print("Size of list structure:", size_of_list, "bytes")
-    print("Total size of list with elements:", total_size, "bytes")
+        print('Processing Video for Charts')
+        frame_generator = extract_frames(video_path, 10, './frames')
+        garbage_collection(entire_video_path)
+        garbage_collection(video_path)
+        garbage_collection(audio_path)
+        print(f'Processed Video {index + 1}')
 

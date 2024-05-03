@@ -1,0 +1,125 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px; /* Increased width for better layout */
+    margin: auto;
+    align-items: flex-start; /* Align content to the start (left) */
+    padding: 20px;
+    background: #f8f9fa;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.title, .description {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.description {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.inputContainer, .keywordsInputContainer {
+    gap: 10px;
+}
+
+.keyword, .creatorItem {
+    background-color: #0056b3; /* Slightly darker blue for better contrast */
+    border-radius: 20px; /* More rounded corners */
+    padding: 8px 12px;
+}
+
+.keyword button, .creatorItem button {
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.keyword button:hover, .creatorItem button:hover {
+    opacity: 1;
+}
+
+.input, .keywordsInput, .searchInput {
+    border: 2px solid #007bff; /* Brighter border color */
+    padding: 12px; /* More padding for better touch interaction */
+}
+
+.addButton, .saveButton {
+    background-color: #28a745; /* Vibrant green */
+    font-size: 1em;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.saveButton {
+    background-color: #007bff; /* Consistent blue */
+}
+
+.searchContainer {
+    padding-top: 10px;
+}
+
+.recommendationsContainer {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.recommendationItem:hover {
+    background-color: #e9ecef; /* Lighter hover effect */
+}
+
+.toggleContainer {
+    justify-content: center; /* Center toggle for better visual alignment */
+}
+
+.slider {
+    background-color: #bfbfbf; /* Less intense background for the slider */
+}
+
+.slider:before {
+    background-color: #f8f9fa; /* Lighter knob for a modern look */
+}
+
+input:checked + .slider {
+    background-color: #007bff; /* Consistent blue for active state */
+}
+
+.creatorsList {
+    width: 100%; /* Use full width to align children */
+}
+
+.creatorItem {
+    display: flex;
+    align-items: center; /* Vertically align items */
+    justify-content: flex-start; /* Align items to the left */
+    gap: 10px; /* Space between elements */
+    padding: 8px 0; /* Padding above and below each item */
+    border-bottom: 1px solid #ccc; /* Separator */
+}
+
+.creatorName, .creatorLink {
+    color: #000; /* Black text for visibility */
+    text-decoration: none; /* No underline on links */
+}
+
+.creatorLink:hover {
+    text-decoration: underline; /* Underline on hover for better UX */
+}
+
+.deleteButton {
+    background-color: #dc3545; /* Bootstrap's danger color for delete button */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    padding: 5px 10px;
+    cursor: pointer; /* Cursor indicates it's clickable */
+    margin-left: auto; /* Push to the right */
+}
+
+.deleteButton:hover {
+    background-color: #c82333; /* Slightly darker on hover */
+}

@@ -2,6 +2,7 @@ import json
 import os 
 from openai import OpenAI
 from dotenv import load_dotenv
+import logging
 
 # with open('/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/endpoint/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
 #     prompt = prompt.read()
@@ -9,9 +10,14 @@ with open('/app/finetuning/prompts/prompt_v4_shortened.txt', 'r') as prompt:
     prompt = prompt.read()
 load_dotenv()
 key = os.getenv('OPENAI_API_KEY')
-client = OpenAI(
-    api_key=key
-)
+try:
+    client = OpenAI(
+        api_key=key
+    )
+    logging.info("OpenAI client initialized successfully.")
+except Exception as e:
+    logging.error("Failed to initialize OpenAI client.", exc_info=True)
+
 
 def apply_llm(dictionary):
     """Open an OpenAI client to interact with the API. Use the API to generate summaries."""

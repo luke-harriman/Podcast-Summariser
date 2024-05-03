@@ -7,15 +7,16 @@ import os
 load_dotenv()
 
 # Database connection parameters
+
 conn_params = {
     'dbname': os.getenv('DATABASE'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'host': os.getenv('DB_HOST')
 }
-
 def fetch_images():
     """A function to query the binary image data from postgrs and render it using PIL."""
+    conn = None 
     try:
         # Connect to your postgres DB
         conn = psycopg2.connect(**conn_params)

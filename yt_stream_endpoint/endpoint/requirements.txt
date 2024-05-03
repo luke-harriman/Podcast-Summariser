@@ -13,4 +13,5 @@ git+https://github.com/openai/whisper.git
 python-dotenv
 psycopg2-binary
 scikit-image
-gunicorn
+gunicorn==20.1.0
+python-dotenv

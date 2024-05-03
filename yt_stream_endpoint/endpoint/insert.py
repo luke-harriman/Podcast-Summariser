@@ -3,6 +3,7 @@ import psycopg2
 from config import config
 import json 
 import logging
+import time
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -14,7 +15,6 @@ def insert_data(dictionary):
     try:
         # Read database configuration
         params = config()
-        logging.debug("Database connection parameters: %s", params)
         logging.debug("Attempting to connect to the database.")
         with psycopg2.connect(**params) as conn:
             logging.debug("Database connection successful.")
@@ -47,3 +47,21 @@ def insert_data(dictionary):
     finally:
         # Closing of the connection is handled by the context manager
         print("Database connection closed.")
+
+if __name__ == "__main__":
+    insert_data({
+        "release_date": "2022-10-10",
+        "start_time": 0,
+        "end_time": 10,
+        "word_position_start": 0,
+        "word_position_end": 10,
+        "uploader": "Luke",
+        "uploader_id": "123",
+        "channel_id": "456",
+        "video_id": "789",
+        "video_title": "Title",
+        "video_description_summary": "Summary",
+        "chapter": "Chapter",
+        "text_data": "Text",
+        "images": ['0x234', '0x345']
+    })
