@@ -17,6 +17,11 @@
     margin-bottom: 10px;
     text-align: left; /* Align text to the left */
   }
+  .divider {
+    border-bottom: 1px solid #ccc; /* Grey line */
+    margin-top: 20px; /* Gap above the line */
+    margin-bottom: 20px; /* Gap below the line */
+  }
   
   .description {
     font-size: 1em;

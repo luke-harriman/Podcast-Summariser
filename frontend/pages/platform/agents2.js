@@ -31,15 +31,10 @@ const Agents = () => {
     return (
         <Layout>
           <div className={styles.agentsContainer}>
-            <h1 className={styles.heading}>User Settings</h1> 
+            <h1 className={styles.heading}>Agent Settings</h1> 
+            <div className={styles.divider}></div>
             <div className={styles.columnsContainer}>
-              <div className={styles.column}>
-                  <h2 className={styles.headingLarge}>Configuration</h2>
-                  <p className={styles.descriptionText}>
-                    Manage all your settings here. Update your keywords, multimedia preferences, and creators in one place.
-                  </p>
                   {userEmail && <UserConfiguration userEmail={userEmail} />} 
-              </div>
             </div>
           </div>
         </Layout>

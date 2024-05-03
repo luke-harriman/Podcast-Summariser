@@ -19,9 +19,9 @@
 }
 
 .heading {
-  font-size: 1.5rem; /* Large font size for headings */
+  font-size: 3rem; /* Large font size for headings */
   font-weight: bold; /* Bold font weight for headings */
-  margin-bottom: 1rem; /* Space below the heading */
+  margin-bottom: 10px;
   color: #333333; /* Color for the heading text */
 }
 

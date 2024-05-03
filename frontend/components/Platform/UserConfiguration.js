@@ -11,35 +11,25 @@ const UserConfiguration = ({ userEmail }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showRecommendations, setShowRecommendations] = useState(false);
     const [filteredRecommendations, setFilteredRecommendations] = useState([]);
+    const [removedCreators, setRemovedCreators] = useState([]);
 
-    useEffect(() => {
+      // This useEffect should NOT be nested inside another.
+      useEffect(() => {
         if (searchTerm) {
-            const filtered = creatorRecommendations.filter(creator =>
-                creator.toLowerCase().startsWith(searchTerm.toLowerCase())
-            ).slice(0, 5); // get first 5 matches
-            setFilteredRecommendations(filtered);
+          const filtered = creatorRecommendations.filter((creator) =>
+            creator.toLowerCase().startsWith(searchTerm.toLowerCase())
+          ).slice(0, 5); // get first 5 matches
+          setFilteredRecommendations(filtered);
         } else {
-            setFilteredRecommendations(creatorRecommendations.slice(0, 5)); // show first 5 by default
+          setFilteredRecommendations(creatorRecommendations.slice(0, 5)); // show first 5 recommendations by default
         }
-    }, [searchTerm, creatorRecommendations]);
-
-    const handleFocus = () => {
-        setShowRecommendations(true);
-    };
-    
-    const handleBlur = () => {
-        // Using a ref to track the focus status could be more reliable
-        setTimeout(() => {
-            if (!document.hasFocus()) {
-                setShowRecommendations(false);
-            }
-        }, 150); // Adjust timing as necessary
-    };
-
-    useEffect(() => {
+      }, [searchTerm]);
+      
+      useEffect(() => {
         const fetchData = async () => {
             try {
                 const configResponse = await axios.get(`/api/user-configurations/${userEmail}`);
+                console.log("Fetched configuration:", configResponse.data);
                 if (configResponse.data) {
                     setKeywords(configResponse.data.key_words || []);
                     setMultiMedia(configResponse.data.multi_media || false);
@@ -48,77 +38,100 @@ const UserConfiguration = ({ userEmail }) => {
                         creator_link: configResponse.data.creator_link[index]
                     }));
                     setCreators(creatorsArray);
+                } else {
+                    setCreators([]); // Ensure to reset if no data is found
                 }
             } catch (error) {
                 console.error("Failed to fetch configuration", error);
+                setCreators([]); // Ensure to reset on error
             }
         };
-        if (userEmail) {
-            fetchData();
-        }
+        fetchData();
     }, [userEmail]);
+    
 
-    const addCreator = (name) => {
+    const addCreator = () => {
+        if (!searchTerm) return;
         const newCreator = {
-            creator_name: name,
-            creator_link: `https://www.youtube.com/@${name}`
+            creator_name: searchTerm,
+            creator_link: `https://www.youtube.com/@${searchTerm}`
         };
         setCreators(prev => [...prev, newCreator]);
         setSearchTerm('');  // Clear search field after adding
     };
 
-    const handleCreatorInputKeyPress = (e) => {
-        if (e.key === 'Enter' && searchTerm) {
-            addCreator(searchTerm);
-            e.preventDefault(); // Prevent form submission on enter
-            setShowRecommendations(false);
-        }
-    };
+    const removeCreator = (creatorToRemove) => {
+        setCreators(prevCreators => prevCreators.filter(creator => creator !== creatorToRemove));
+        setRemovedCreators(prevRemoved => [...prevRemoved, creatorToRemove]);
+      };
 
-    const saveConfiguration = async () => {
+      const saveConfiguration = async () => {
         try {
-            await axios.post(`/api/user-configurations/update`, {
+            await axios.post('/api/user-configurations/update', {
                 email: userEmail,
                 key_words: keywords,
                 multi_media: multiMedia,
                 creator_name: creators.map(creator => creator.creator_name),
                 creator_link: creators.map(creator => creator.creator_link),
             });
-            console.log("Configuration saved successfully");
+            const response = await axios.get(`/api/user-configurations/${userEmail}`);
+            if (response.data && response.data.creator_name) {
+                const updatedCreators = response.data.creator_name.map((name, index) => ({
+                    creator_name: name,
+                    creator_link: response.data.creator_link[index]
+                }));
+                setCreators(updatedCreators);
+            } else {
+                setCreators([]); // Safeguard against non-array data
+            }
+            setRemovedCreators([]);
         } catch (error) {
-            console.error("Failed to save configuration", error);
+            console.error('Failed to save changes:', error.response ? error.response.data.error : error.message);
+            setCreators([]); // Reset to empty array on error
         }
     };
+    
 
     return (
         <div className={styles.container}>
             <div>
-                <h2>Creators Configuration</h2>
-                <input
+            <h2 className={styles.title}>Creators</h2>
+            <h2 className={styles.descrition}>Hello</h2>                
+            <input
+                    className={styles.searchInput}
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onKeyPress={handleCreatorInputKeyPress}
+                    onFocus={() => setShowRecommendations(true)}
+                    onBlur={() => {
+                        // Delay hiding the recommendations to provide enough time for a click event to be processed
+                        setTimeout(() => {
+                            if (!document.activeElement.classList.contains(styles.recommendationItem)) {
+                                setShowRecommendations(false);
+                            }
+                        }, 150);
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter' && searchTerm) {
+                            addCreator(searchTerm);
+                            e.preventDefault();
+                            setShowRecommendations(false);
+                        }
+                    }}
                     placeholder="Search creators..."
                 />
                 {showRecommendations && (
-                    <div className={styles.recommendationsContainer}>
-                        {filteredRecommendations.map((creator, index) => (
-                            <div
-                                key={index}
-                                className={styles.recommendationItem}
-                                onMouseDown={() => {
-                                    setSearchTerm(creator);
-                                    setShowRecommendations(false);
-                                    addCreator(creator);
-                                }}
-                            >
-                                {creator}
-                            </div>
-                        ))}
-                    </div>
+                <div className={styles.recommendationsContainer}>
+                    {filteredRecommendations.map((creator, index) => (
+                        <div
+                            key={index}
+                            className={styles.recommendationItem}
+                            onMouseDown={() => recommendationSelected(creator)}
+                        >
+                            {creator}
+                        </div>
+                    ))}
+                </div>
                 )}
             <div className={styles.creatorsList}>
                 {creators.map((creator, index) => (
@@ -135,15 +148,11 @@ const UserConfiguration = ({ userEmail }) => {
             </div>
             </div>
             <div>
-                <h2>Keywords Configuration</h2>
+            <h2 className={styles.title}>Keywords</h2>
+            <h2 className={styles.descrition}>Hello</h2> 
                 <div className={styles.keywordsContainer}>
-                    {keywords.map((keyword, index) => (
-                        <div key={index} className={styles.keyword}>
-                            {keyword}
-                            <button onClick={() => setKeywords(keywords.filter(k => k !== keyword))}>&times;</button>
-                        </div>
-                    ))}
                     <input
+                        className={styles.searchInput}
                         type="text"
                         value={inputKeyword}
                         onChange={(e) => setInputKeyword(e.target.value)}
@@ -157,18 +166,27 @@ const UserConfiguration = ({ userEmail }) => {
                         placeholder="Add a keyword"
                     />
                 </div>
+                <div className={styles.keywordsContainer}>
+                {keywords.map((keyword, index) => (
+                        <div key={index} className={styles.keyword}>
+                            {keyword}
+                            <button onClick={() => setKeywords(keywords.filter(k => k !== keyword))}>&times;</button>
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div>
-                <label>
-                    Include Multimedia:
-                    <input
-                        type="checkbox"
-                        checked={multiMedia}
-                        onChange={() => setMultiMedia(!multiMedia)}
-                    />
+            <h2 className={styles.title}>Advanced Recon</h2>
+            <h2 className={styles.descrition}>Hello</h2> 
+            <div className={styles.toggleContainer}>
+                <label className={styles.switch}>
+                    <input type="checkbox" checked={multiMedia} onChange={() => setMultiMedia(!multiMedia)} />
+                    <span className={styles.slider}></span>
                 </label>
+                <span className={styles.toggleLabel}>007 Mode</span>
             </div>
-            <button onClick={saveConfiguration}>Save Changes</button>
+        <div>
+            <button className={styles.saveButton} onClick={saveConfiguration}>Save Changes</button>
+        </div>
         </div>
     );
 };
