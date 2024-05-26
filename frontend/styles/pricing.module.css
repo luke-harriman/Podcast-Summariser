@@ -1,0 +1,118 @@
+.pricingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.heading {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.divider {
+  width: 80%;
+  height: 1px;
+  background-color: #ddd;
+  margin-bottom: 20px;
+}
+  
+  .cardsContainer {
+    display: flex;
+    justify-content: center; /* Center the cards in the container */
+    gap: 75px; /* Adjust the gap between cards */
+    width: 100%;
+    max-width: 1200px; /* Set a max width to control the container size */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+  
+  .card {
+    background: linear-gradient(to bottom, #fce4ec, #f8bbd0);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures space between content and button */
+    height: 100%; /* Ensures card stretches to full height */
+    min-height: 400px; /* Sets a minimum height for uniformity */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #0070f3; /* Changed color for price text */
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.featureItem svg {
+  margin-right: 10px;
+  color: #0070f3;
+}
+
+.currentPlan, .subscribe {
+  color: white;
+  width: 100%;
+  padding: 12px 0; /* Slightly increased padding */
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1rem;
+  border-radius: 5px; /* Added border radius for buttons */
+  transition: background-color 0.3s ease;
+}
+
+.currentPlan {
+  background-color: #34D399;
+}
+
+.currentPlan:hover {
+  background-color: #2ec48a;
+}
+
+.subscribe {
+  background-color: #EF4444;
+}
+
+.subscribe:hover {
+  background-color: #e63946;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+

@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model users {
+  user_id       Int     @id @default(autoincrement()) @unique
+  full_name     String
+  email         String @unique
+  password      String
+}
+
+model creator_lists {
+  email           String    @unique
+  creator_link    String
+  creator_name    String
+}
+
+model agent_configurations {
+  email       String   @unique
+  key_words   String[]
+  multi_media Boolean
+}
+
+model user_configurations {
+  email           String @unique 
+  creator_link    String[]
+  creator_name    String[]
+  key_words       String[]
+  multi_media     Boolean
+}
+
+model newsletters {
+  insert_date           DateTime 
+  release_date          DateTime
+  start_time            Int
+  end_time              Int
+  word_position_start   Int
+  word_position_end     Int
+  uploader              String
+  uploader_id           String
+  channel_id            String
+  video_id              String
+  video_title           String
+  video_description_summary String
+  chapter               String @unique
+  text_data             String 
+  images                Bytes[]
+  in_dato               Boolean
+}
+
+model subscriptions {
+  user_id                 Int
+  email                   String
+  amount_total            Int
+  currency                String
+  stripe_subscription_id  Int
+  status                  String
+	payment_link            String
+	invoice_id              String
+	customer_id             String
+  period_end              Int
+  period_start            Int
+  created_at              Int @unique
+}
+
+model weekly_user_configuration_snapshot {
+    snapshot_time       DateTime
+    start_at            DateTime
+	  user_id             Int
+	  full_name           String 
+    email               String                       
+    creator_link        String[]              
+    creator_name        String[]              
+    key_words           String[]
+    multi_media         Boolean 
+    @@unique([snapshot_time, user_id])
+
+}

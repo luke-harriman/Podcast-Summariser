@@ -1,0 +1,130 @@
+/* pricinghomepage.module.css */
+.pricingSection {
+    background: linear-gradient(to bottom, #f7f7f7, #fff);
+    width: 100%;
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+  
+  .pricingContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .sectionHeader {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  
+  .sectionSubHeader {
+    line-height: normal;
+    width: 83.333333%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .pricingGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .pricingGrid {
+      grid-template-columns: repeat(2, 1fr);
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  
+  .pricingCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 25rem;
+    background: linear-gradient(to bottom right, #fff, #fef0f0);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .pricingCard:hover {
+    transform: scale(1.05);
+  }
+  
+  .pricingCardInitial {
+    transform: scale(0.85);
+  }
+  
+  .pricingCardAnimate {
+    transform: scale(1);
+  }
+  
+  .planHeader {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .planFeatures {
+    display: flex;
+    flex-direction: column;
+    list-style: inside;
+    padding-left: 1.5rem;
+    padding-right: 0;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    color: #555;
+    flex-grow: 1;
+  }
+  
+  .planFeature {
+    position: relative;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .planFeatureIcon {
+    margin-right: 0.5rem;
+    color: rgb(255, 0, 0); /* Add this line to make the icons blue */
+  }
+  
+  .planPrice {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  

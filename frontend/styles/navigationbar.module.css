@@ -24,3 +24,12 @@
   background-color: #bc462b; /* Darker grey/black for active link */
   color: white;
 }
+
+.navItemWrapper {
+  margin-bottom: 10px;
+}
+
+.navItemDisabled {
+  color: #999;
+  cursor: not-allowed;
+}

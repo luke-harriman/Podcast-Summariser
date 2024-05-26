@@ -1,234 +1,254 @@
+/* userconfiguration.module.css */
 .container {
-    min-height: 100vh; /* Ensure it takes the minimum height of the full viewport */
-    margin-left: 0rem; /* Adjusts distance from the navbar */
-    margin-top: 1rem; /* Adjusts distance from top of screen */
-    margin-bottom: 1rem; /* Adjusts distance from bottom of screen */
-    margin-right: 1rem; /* Adjusts distance from right side of screen */
-    background-color: #ffffff; /* Background color for the content area */
-    width: 75%;
-  }
+  min-height: 100vh;
+  margin: 1rem;
+  background-color: #ffffff;
+  width: 75%;
+}
 
-  .title {
-    font-size: 1.5em;
-    color: #333;
-    margin-bottom: 10px;
-    text-align: left; /* Align text to the left */
-  }
-  
-  .description {
-    font-size: 1em;
-    color: #666;
-    margin-bottom: 20px;
-    text-align: left; /* Align text to the left */
-  }
+.title {
+  font-size: 1.5em;
+  color: #333;
+  margin: 20px 0 10px 0;
+  text-align: left;
+}
+
+.description {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: left;
+}
 
 .inputContainer, .keywordsInputContainer {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    gap: 10px;
+  margin: 8px 0;
+  gap: 10px;
 }
 
 .creatorItem {
-    background-color: #ffffff; /* Slightly darker blue for better contrast */
-    border-radius: 20px; /* More rounded corners */
-    padding: 8px 12px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 8px 12px;
 }
+
 .divider {
-    border-bottom: 1px solid #ccc; /* Grey line */
-    margin-top: 20px; /* Gap above the line */
-    margin-bottom: 20px; /* Gap below the line */
-  }
+  border-bottom: 1px solid #ccc;
+  margin: 20px 0;
+}
 
 .switch {
-    position: relative;
-    display: inline-block;
-    margin-right: 15px;
-    width: 60px;
-    height: 34px;
-  }
-  
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .toggleLabel {
-    font-size: 20px;  /* Example size, adjust as needed */
-    color: #333;  /* Dark grey color for better readability */
+  position: relative;
+  display: inline-block;
+  margin-right: 15px;
+  width: 60px;
+  height: 34px;
 }
 
-  
-  .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px; /* This makes the slider look rounded */
-    }
-  
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%; /* This makes the toggle inside the slider rounded */
-    }
-    
-    .toggleContainer {
-        margin-top: 20px;  /* Space above the toggle switch */
-        margin-bottom: 20px; /* Space below the toggle switch */
-        display: flex;
-        align-items: center;  /* Aligns items vertically in the center */
-        justify-content: flex-start;  /* Aligns content to the left */
-        gap: 10px;  /* Space between the label text and the toggle switch */
-    }
-
-
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
-    
-    input:checked + .slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
-      
-
-.keyword {
-    display: inline-flex; /* Allows for dynamic width */
-    align-items: center;
-    padding: 8px 12px; /* Consistent padding */
-    margin-right: 8px; /* Space between tags */
-    margin-top: 8px; /* Space above tags */
-    margin-bottom: 8px; /* Space below tags */
-    background-color: #0056b3;
-    border-radius: 20px;
-    color: white;
-}
-  
-.keyword button, .creatorItem button {
-    opacity: 0.8;
-    transition: opacity 0.3s;
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.keyword button:hover, .creatorItem button:hover {
-    opacity: 1;
-}
-
-.input, .keywordsInput, .searchInput {
-    border: 2px solid #007bff; /* Brighter border color */
-    padding: 12px; /* More padding for better touch interaction */
-}
-
-.saveButton {
-    background-color: #28a745; /* Green background */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.searchContainer {
-    padding-top: 10px;
-}
-.searchInput {
-    flex: 1;
-    margin-right: 10px;
-    width: auto; /* Or you could specify a width in px or % */
-    flex-grow: 1;
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-.searchAndButtonsContainer {
-    position: relative; /* Makes it the anchor for absolute positioning */
-}
-.recommendationsContainer {
-    position: absolute;
-    width: 100%; /* Adjust width as necessary, can match the input field */
-    top: 100%; /* Positions it right below the input field */
-    left: 0;
-    z-index: 1000; /* Ensures it floats above other content */
-    background: white; /* or any other suitable background */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better visibility */
-}
-
-.recommendationItem:hover {
-    background-color: #e9ecef; /* Lighter hover effect */
-}
-
-.toggleContainer {
-    display: flex;
-    align-items: center;  /* Vertically center the items */
-    gap: 10px;  /* Space between the label text and the toggle switch */
+.toggleLabel {
+  font-size: 20px;
+  color: #333;
 }
 
 .slider {
-    background-color: #bfbfbf; /* Less intense background for the slider */
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
 }
 
 .slider:before {
-    background-color: #f8f9fa; /* Lighter knob for a modern look */
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggleContainer {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 input:checked + .slider {
-    background-color: #007bff; /* Consistent blue for active state */
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.keyword {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 15px 8px;
+  background-color: #007bff;
+  border-radius: 20px;
+  color: white;
+}
+
+.keyword button, .creatorItem button {
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.keyword button:hover, .creatorItem button:hover {
+  opacity: 1;
+}
+
+.input, .keywordsInput, .searchInput {
+  border: 2px solid #007bff;
+  padding: 12px;
+}
+
+.saveButton {
+  background-color: #1cd347;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.searchContainer {
+  padding-top: 10px;
+}
+
+.searchInput {
+  flex: 1;
+  margin-right: 10px;
+  width: 50%;
+  flex-grow: 1;
+  margin: 15px 0;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.searchAndButtonsContainer {
+  position: relative;
+}
+
+.recommendationsContainer {
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.recommendationItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recommendationItem:hover {
+  background-color: #e9ecef;
 }
 
 .creatorsList {
-    width: 100%; /* Use full width to align children */
+  width: 100%;
 }
 
 .creatorItem {
-    display: grid;
-    grid-template-columns: 1fr 3fr 40px; /* Adjust the fr units as needed */
-    align-items: center;
-    gap: 16px;
-    padding: 8px 0;
-  }
+  display: grid;
+  grid-template-columns: 1fr 3fr 40px;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+}
 
 .creatorLink {
-    color: #000; /* Black text for visibility */
-    text-decoration: none; /* No underline on links */
+  color: #001eff;
+  text-decoration: none;
 }
 
 .creatorName {
-    max-width: 200px; /* This is an example, adjust as necessary */
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .creatorName, .creatorLink, .deleteButton {
-text-align: left; /* Center the text within each grid cell */
+  text-align: left;
 }
 
 .creatorLink:hover {
-    text-decoration: underline; /* Underline on hover for better UX */
+  text-decoration: underline;
 }
 
 .deleteButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #f44336;
-    color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #f44336;
+  color: white;
 }
 
 .deleteButton:hover {
-    background-color: #c82333; /* Slightly darker on hover */
+  background-color: #c82333;
 }
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  z-index: 1000;
+}
+
+.successMessage {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1cd347;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  text-align: center;
+  font-size: 1rem;
+}
+ 

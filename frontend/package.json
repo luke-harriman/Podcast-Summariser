@@ -1,0 +1,46 @@
+{
+  "name": "next-landing-vpn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node cron.js & next dev",
+    "build": "next build",
+    "start": "node cron.js & next start",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "@datocms/cma-client-browser": "^3.3.1",
+    "@datocms/cma-client-node": "^3.3.1",
+    "@fullhuman/postcss-purgecss": "^3.0.0",
+    "@heroicons/react": "^2.1.3",
+    "@prisma/client": "^5.11.0",
+    "autoprefixer": "^10.4.12",
+    "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "framer-motion": "6.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "micro": "^10.0.1",
+    "mjml": "^4.15.3",
+    "next": "^14.2.3",
+    "next-auth": "^4.24.7",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.11.5",
+    "postcss": "^8.4.17",
+    "postcss-import": "^13.0.0",
+    "prisma": "^5.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "react-scroll": "^1.8.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
+    "stripe": "^15.7.0",
+    "tailwindcss": "^3.1.8",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "babel-plugin-inline-react-svg": "^2.0.2"
+  }
+}
