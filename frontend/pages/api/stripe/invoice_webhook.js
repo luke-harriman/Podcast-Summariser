@@ -1,6 +1,6 @@
 import { buffer } from 'micro';
-import stripe from '../../utils/stripe';
-import { query } from '../../utils/db';
+import stripe from '../../../utils/stripe';
+import { query } from '../../../utils/db';
 
 export const config = {
   api: {
