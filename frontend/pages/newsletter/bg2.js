@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout/Layout';
 import CtaButton from '../../components/misc/CtaButton';
 import SeoHead from '../../components/SeoHead';
-import YouTubeEmbed from '../../components/misc/YouTubeEmbed';
 import styles from '../../styles/newsletter.module.css'; // Import the CSS module
 import ImageGallery from '../../components/Platform/ImageGallery'; // Import ImageGallery component
 
@@ -40,9 +39,6 @@ const StartUpsNewsletter = () => {
           <h1 className="text-5xl font-bold text-center my-8">
             {newsletter[0].videoTitle}
           </h1>
-          <div className="flex justify-around gap-4">
-            <YouTubeEmbed videoId={videoId} />
-          </div>
           <div className={`max-w-3xl mx-auto text-center ${styles.chaptersContainer}`}>
             {newsletter.map((item, index) => (
               <div key={index} className={styles.chapter}>
