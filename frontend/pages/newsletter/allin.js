@@ -5,6 +5,12 @@ import SeoHead from '../../components/SeoHead';
 import styles from '../../styles/newsletter.module.css'; // Import the CSS module
 import ImageGallery from '../../components/Platform/ImageGallery'; // Import ImageGallery component
 
+
+console.log('Layout:', typeof Layout);
+console.log('CtaButton:', typeof CtaButton);
+console.log('SeoHead:', typeof SeoHead);
+console.log('ImageGallery:', typeof ImageGallery);
+
 const StartUpsNewsletter = () => {
   const [newsletter, setNewsletter] = useState(null);
   const [videoId, setVideoId] = useState('vDr1983LIuo');
