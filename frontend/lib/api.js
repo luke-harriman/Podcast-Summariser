@@ -17,8 +17,8 @@ export async function fetchData(userId) {
 
     for (let i = 0; i < snapshots.length; i++) {
         const { creator_name: creatorNames, key_words: keyWords, start_at: snapshotTime } = snapshots[i];
-        let nextSnapshotTime = snapshots[i + 1] ? snapshots[i + 1].start_at : new Date();
-        // Check if snapshotTime is equal to nextSnapshotTime
+        let nextSnapshotTime = new Date(snapshotTime);
+        nextSnapshotTime.setDate(nextSnapshotTime.getDate() + 7);   
         if (snapshotTime.toISOString() === nextSnapshotTime.toISOString()) {
             nextSnapshotTime = new Date();
             console.log('Snapshot time equals Next snapshot time, updated Next snapshot time to:', nextSnapshotTime);
@@ -26,6 +26,7 @@ export async function fetchData(userId) {
         console.log('Snapshot time:', snapshotTime, 'Next snapshot time:', nextSnapshotTime)
 
         const creatorsWithAt = creatorNames.map(name => `@${name}`);
+        console.log('Creators with @:', creatorsWithAt);
         let hasMore = true;
         let skip = 0;
 

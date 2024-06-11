@@ -201,13 +201,13 @@ async function processNewsletters() {
     }
 
     // Cleanup and disconnect from the database
-    processNewsletters()
-        .catch(e => {
-            console.error('Error processing newsletter: ', e);
-        })
-        .finally(async () => {
-            console.log("Process Finished.");
-        });
+    // processNewsletters()
+    //     .catch(e => {
+    //         console.error('Error processing newsletter: ', e);
+    //     })
+    //     .finally(async () => {
+    //         console.log("Process Finished.");
+    //     });
 }
 
 processNewsletters();
