@@ -3,7 +3,8 @@
       {
         "path": "/api/dato/datocms_post",
         "schedule": "* * * * *"
+        
       }
     ]
-}
+  }
   
