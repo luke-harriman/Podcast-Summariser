@@ -1,11 +1,11 @@
-const { PrismaClient } = require('@prisma/client');
-const { buildClient } = require('@datocms/cma-client-node');
-const fs = require('fs');
-const { promisify } = require('util');
-const os = require('os');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const fetch = require('node-fetch');
+import { PrismaClient } from '@prisma/client';
+import { buildClient } from '@datocms/cma-client-node';
+import fs from 'fs';
+import { promisify } from 'util';
+import os from 'os';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import fetch from 'node-fetch';
 
 // Initialize Prisma and DatoCMS clients
 const prisma = new PrismaClient();
@@ -67,7 +67,7 @@ async function checkForDuplicate(video_id, chapter_title) {
             type: "article",
             fields: {
                 video_id: { eq: video_id },
-                chapter_title: { eq: chapter_title }
+                chapter_title: { eq: chapter_title }    
             }
         },
     });
@@ -143,7 +143,7 @@ async function createDatoRecord(newsletter, imageUploads, thumbnailUpload) {
 /**
  * Process newsletters and upload data to DatoCMS.
  */
-async function processNewsletters() {
+export default async function processNewsletters() {
     const newsletters = await prisma.newsletters.findMany({
         where: { in_dato: false }
     });
@@ -208,9 +208,4 @@ async function processNewsletters() {
         .finally(async () => {
             console.log("Process Finished.");
         });
-}
-
-// Run the function if the script is executed directly
-if (require.main === module) {
-    processNewsletters();
 }
