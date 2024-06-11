@@ -34,7 +34,7 @@ export async function fetchData(userId) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_DATOCMS_API_KEY}`,
+                    'Authorization': `Bearer ${process.env.DATOCMS_API_KEY}`,
                 },
                 body: JSON.stringify({
                     query: `
@@ -203,7 +203,7 @@ export async function fetchDataById(id, userId) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_DATOCMS_API_KEY}`,
+                'Authorization': `Bearer ${process.env.DATOCMS_API_KEY}`,
             },
             body: JSON.stringify({ query }),
         });
@@ -256,7 +256,7 @@ export async function fetchDataNewsletter(userId, creatorName, keyWords, snapsho
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_DATOCMS_API_KEY}`,
+            'Authorization': `Bearer ${process.env.DATOCMS_API_KEY}`,
         },
         body: JSON.stringify({
             query: graphQuery
