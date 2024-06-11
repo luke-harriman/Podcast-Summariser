@@ -2,7 +2,7 @@
     "crons": [
       {
         "path": "/api/dato/datocms_post",
-        "schedule": "* * * * *"
+        "schedule": "0 21 * * *"
 
       }
     ]
