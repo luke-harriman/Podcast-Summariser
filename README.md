@@ -3,10 +3,7 @@
 1. [Introdiction](#introduction)
 3. [Installation](#installation)
 4. [Usage](#usage)
-5. [Data Generation](#data-generation)
-6. [Backend Services](#backend-services)
-7. [Frontend](#frontend)
-8. [Deployment](#deployment)
+5. [Data Generation & DETR Model Training](#data-generation--detr-model-training)
 
 
 ## Introduction
