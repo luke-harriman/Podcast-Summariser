@@ -13,17 +13,17 @@
 The Podcast Summariser leverages ChatGPT's API, the open sources Whisper model and a fine-tuned DETR model to summarize YouTube podcast transcripts into a clean, concise newsletter. The transcripts are transcribed using the Whisper model for improved quality over the yt_dlp library. Additionally, the DETR model is used to capture useful screenshots from the video, such as charts and headlines (although this functionality can be extended much further).
 
 ## Technology Stack
-1. Next.js: For building the frontend.
-2. Python: For backend, model training and data processing.
-3. DETR Model: For object detection and image extraction.
-4. Whisper: For transcribing audio with high accuracy.
-5. OpenCV: For image processing tasks.
-6. yt-dlp: For downloading YouTube videos.
-7. DatoCMS: For storing all newsletter summaries and managing CDN/caching.
-8. Docker: For containerizing the app.
-9. Google Cloud Platform (GCP): For hosting backend services.
-10. Raspberry Pi 4 (8GiB): For running the PostgreSQL database.
-11. PostgreSQL: For storing transcriptions, summaries, and user data.
+1. **Next.js**: For building the frontend.
+2. **Python**: For backend, model training and data processing.
+3. **DETR Model**: For object detection and image extraction.
+4. **Whisper**: For transcribing audio with high accuracy.
+5. **OpenCV**: For image processing tasks.
+6. **yt-dlp**: For downloading YouTube videos.
+7. **DatoCMS**: For storing all newsletter summaries and managing CDN/caching.
+8. **Docker**: For containerizing the app.
+9. **Google Cloud Platform (GCP)**: For hosting backend services.
+10. **Raspberry Pi 4 (8GiB)**: For running the PostgreSQL database. Here is a great video on [setting up PostgreSQL on a raspberrp Pi](https://www.youtube.com/watch?v=DZlxuf2kzEU)
+11. **PostgreSQL**: For storing transcriptions, summaries, and user data.
 
 ## Installation
 To set up the project locally, follow these steps:
@@ -42,16 +42,25 @@ cd Podcast-Summariser
 
 ## Usage
 ### Transcribing YouTube Videos
-The get_latest_episode.py script fetches the latest video from a YouTube channel using yt-dlp. Then, the youtube audio is downloadeded into a temperary file and passed to the Whisper model for higher quality. The yt-dlp provides access to the youtube transcript but the quality is very poor. 
+The `get_latest_episode.py` script fetches the latest video from a YouTube channel using `yt-dlp`. Then, the youtube audio is downloadeded into a temperary file and passed to the Whisper model for higher quality. The `yt-dlp` provides access to the youtube transcript but the quality is very poor. 
 
 ### Summarization
-The transcriptions are summarized using ChatGPT's API. All the system and user prompts for the API can be found in the `yt_stream_endpoint/endpoint/finetuning/prompts/` folder.
+The transcriptions are summarized using ChatGPT's API. All the system and user prompts for the API can be found in the `prompts/` folder.
 
 ### Screenshot Extraction
 The DETR model processes video frames to extract important screenshots like charts and data tables. See more about the model is the section called [Data Generate and Model Training](#data-generation). 
 
 ### Postgres 
-All the extracted data is then uploaded to a PostgreSQL database using the yt_stream_endpoint/endpoint/insert.py file. This data is then imported into DatoCMS using the frontend/pages/api/dato/datocms_post_common.js file.
+All the extracted data is then uploaded to a PostgreSQL database running on a Raspberry Pi 4 using the `/insert.py` script.
+
+### DatoCMS
+This data is then imported into DatoCMS using the `datocms_post_common.js` script.
+
+### Frontend
+The frontend is deployed using Vercel, which also handles user authentication. 
+
+### GCP
+The Flask app (app.py) is containerized with Docker and pushed to GCR (Google Cloud Registry) before being deployed on GCP (Google Cloud Platform). 
 
 
 ## Data Generation
