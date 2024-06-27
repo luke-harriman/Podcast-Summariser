@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import random 
 
 # Environment and model setup
-HF_TOKEN="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"
+HF_TOKEN = os.getenv('HF_TOKEN')
 model_weights_save_path = "luke-harriman/chart_object_detection"
 image_processor_save_path = model_weights_save_path
 

@@ -1,3 +1,7 @@
+// Why have a datocms_post.js and datocms_post_common.js?
+// It's due to server and client side conflicts where you can't run datocms_post.js on the server side.
+// The solution is to create a common file that can be imported by both server and client side code.
+
 const { PrismaClient } = require('@prisma/client');
 const { buildClient } = require('@datocms/cma-client-node');
 const fs = require('fs');
