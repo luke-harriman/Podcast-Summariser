@@ -44,7 +44,7 @@ The `data_bb_generator.py` script synthetically generates data to fine-tune the 
 3. Used OpenCV to superimpose the charts onto random images in various positions, sizes, and orientations.
 4. Logged the position (x, y, width, height) and added it to an annotations dictionary to fine-tune the DETR model.
 
-The `detr_model_training.py` script is then used to fine-tune the DETR model from huggingface on the data so it can extract images like:
+The `detr_model_training.py` script is then used to fine-tune the DETR model from huggingface to extract images like:
 
 <p align="center">
   <img src="readme_images/Screenshot 2024-06-27 at 7.09.14 PM.png" alt="Diagram" width="350"/>
