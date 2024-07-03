@@ -1,6 +1,6 @@
 # Podcast Summariser
 
-1. [Introdiction](#introduction)
+1. [Introduction](#introduction)
 2. [Installation](#installation)
 3. [Data Generation & DETR Model Training](#data-generation--detr-model-training)
 
