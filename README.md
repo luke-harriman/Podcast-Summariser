@@ -34,8 +34,6 @@ cd Podcast-Summariser
 ```
 3. Install the necessary dependencies for the backend and frontend using the requirements.txt files.
 
-(Note: The python driver for postgres can be quite sensitive so it may take a little bit to get it working.)
-
 ## Data Generation & DETR Model Training
 The `data_bb_generator.py` script synthetically generates data to fine-tune the DETR model.
 
