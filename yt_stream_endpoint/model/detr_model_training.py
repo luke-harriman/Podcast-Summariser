@@ -23,10 +23,10 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 # Note: Do not run this script in the same directory as a script to run tensorboard. If you do, the script doesn't train the model as it just runs tensorboard locally. If you try to train the model and see "TensorBoard 2.15.1 at http://localhost:6006/" then you have a script running tensorboard which you need to remove. 
 
 # settings
-ANNOTATION_FILE_NAME = "image_data_coco_format.json"
-TRAIN_DIRECTORY ='/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/model/output_images_coco_format/train'
-VAL_DIRECTORY = '/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/model/output_images_coco_format/test'
-TEST_DIRECTORY = '/Users/lukeh/Desktop/python_projects/youtube_scraper/yt_stream_endpoint/model/output_images_coco_format/val'
+ANNOTATION_FILE_NAME = ""
+TRAIN_DIRECTORY =''
+VAL_DIRECTORY = ''
+TEST_DIRECTORY = ''
 
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 CHECKPOINT = 'facebook/detr-resnet-50'
@@ -73,18 +73,18 @@ TEST_DATASET = CocoDetection(
     train=False)
 
 
-# select a random image
+# Select a random image
 image_ids = TRAIN_DATASET.coco.getImgIds()
 image_id = random.choice(image_ids)
 print('Image #{}'.format(image_id))
 
-# load image and annotations
+# Load image and annotations
 image_info = TRAIN_DATASET.coco.loadImgs(image_id)[0]
 annotations = TRAIN_DATASET.coco.imgToAnns[image_id]
 image_path = os.path.join(TRAIN_DATASET.root, image_info['file_name'])
 image = cv2.imread(image_path)
 
-# annotate
+# Annotate
 detections = sv.Detections.from_coco_annotations(coco_annotation=annotations)
 categories = TRAIN_DATASET.coco.cats
 id2label = {1: 'Chart'}
@@ -96,10 +96,6 @@ box_annotator = sv.BoxAnnotator()
 annotated_image = box_annotator.annotate(scene=image, detections=detections, labels=labels)
 
 def collate_fn(batch):
-    """
-    DETR authors employ various image sizes during training, making it not possible to directly batch together images. Hence they pad the images to the biggest
-    resolution in a given batch, and create a corresponding binary pixel_mask which indicates which pixels are real/which are padding
-    """
     pixel_values = [item[0] for item in batch]
     encoding = image_processor.pad(pixel_values, return_tensors="pt")
     labels = [item[1] for item in batch]
@@ -187,7 +183,7 @@ model_checkpoint = ModelCheckpoint(
     filename="best-checkpoint",
     save_top_k=1,
     verbose=True,
-    monitor="validation/loss",  # Adjust based on the metric you are logging
+    monitor="validation/loss", 
     mode="min",
 )
 trainer = pl.Trainer(
