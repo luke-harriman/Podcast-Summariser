@@ -20,7 +20,6 @@ except Exception as e:
 
 
 def apply_llm(dictionary):
-    """Open an OpenAI client to interact with the API. Use the API to generate summaries."""
     for item in dictionary:
         input = f'Topic Header: {item["chapter"]} \n {item["text_data"]}'  # Assuming keys "topic_header" and "text_data"
         response = client.chat.completions.create(
