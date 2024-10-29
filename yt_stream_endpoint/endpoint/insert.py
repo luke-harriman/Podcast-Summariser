@@ -8,7 +8,6 @@ import time
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def insert_data(dictionary):
-    """Insert data into the newsletters table."""
     sql = """INSERT INTO newsletters(release_date, start_time, end_time, word_position_start, word_position_end, uploader, uploader_id, channel_id, video_id, video_title, video_description_summary, chapter, text_data, images)
              VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
