@@ -5,7 +5,6 @@ from PIL import Image
 from skimage.transform import resize
 
 def get_image(path):
-    """Load an image and prepare it for SSIM comparison, ensuring it is returned as a numpy array."""
     img = Image.open(path)
     # Resize to maintain detail and use RGB to keep color information
     img = img.resize((1024, 1024), Image.Resampling.LANCZOS)
@@ -14,7 +13,6 @@ def get_image(path):
     return img_array
 
 def compare_images(img1, img2, target_size=(256, 256)):
-    """Compare two images using SSIM on RGB after resizing them to the same dimensions."""
     # Ensure both images are numpy arrays
     if isinstance(img1, Image.Image): 
         img1 = np.array(img1.convert('RGB'))
@@ -30,7 +28,6 @@ def compare_images(img1, img2, target_size=(256, 256)):
     return np.mean(ssim_scores)  
 
 def find_similar_images(folder_path, threshold=0.95):
-    """Find similar images in a folder based on SSIM."""
     files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(('png', 'jpg', 'jpeg'))]
     similar_pairs = []
     
